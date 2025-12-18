@@ -116,27 +116,31 @@ const Sidebar = ({ sidebarOpen }) => {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `px-4 py-3 flex items-center space-x-4 rounded-lg ${
+        `px-4 py-3 flex items-center space-x-4 rounded-xl transition-all duration-300 ${
           isActive
-            ? "text-white bg-gradient-to-r from-sky-600 to-cyan-400"
-            : "text-gray-500 group"
+            ? "text-white bg-gradient-to-r from-slate-600 to-slate-700 shadow-md"
+            : "text-gray-300 hover:text-white hover:bg-gray-700/50"
         }`
       }
     >
-      {icon}
-      <span>{children}</span>
+      <span className="text-lg">{icon}</span>
+      <span className="font-medium">{children}</span>
     </NavLink>
   );
 
   return (
     <aside
-      className={`bg-white h-screen flex flex-col border-r transition-all duration-500 ease-in-out ${
+      className={`h-screen flex flex-col transition-all duration-500 ease-in-out ${
         sidebarOpen 
           ? "w-64 flex-shrink-0" 
           : "w-0 overflow-hidden"
       }`}
+      style={{ 
+        background: 'linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%)',
+        boxShadow: '4px 0 24px rgba(0, 0, 0, 0.4)'
+      }}
     >
-      <div className="h-16 flex items-center justify-center px-4 border-b">
+      <div className="h-16 flex items-center justify-center px-4 border-b border-gray-700/50">
         <Link to="/" className="flex items-center">
           <img src={logo} alt="logo" className={`h-12 w-auto transition-opacity duration-500 ease-in-out ${
             sidebarOpen ? "opacity-100 delay-100" : "opacity-0 delay-0"
@@ -144,7 +148,7 @@ const Sidebar = ({ sidebarOpen }) => {
         </Link>
       </div>
 
-      <nav className={`flex-1 overflow-y-auto p-4 space-y-2 transition-opacity duration-500 ease-in-out ${
+      <nav className={`flex-1 overflow-y-auto p-4 space-y-1.5 transition-opacity duration-500 ease-in-out ${
         sidebarOpen ? "opacity-100 delay-100" : "opacity-0 delay-0"
       }`} style={{ minWidth: sidebarOpen ? '256px' : '0px' }}>
         {menuItems.map((menu) => (
@@ -152,30 +156,30 @@ const Sidebar = ({ sidebarOpen }) => {
             {menu.subItems ? (
               <>
                 <div
-                  className="px-4 py-3 flex items-center justify-between space-x-4 rounded-lg text-gray-500 group cursor-pointer hover:bg-gray-100"
+                  className="px-4 py-3 flex items-center justify-between space-x-4 rounded-xl text-gray-300 group cursor-pointer hover:bg-gray-700/50 hover:text-white transition-all duration-300"
                   onClick={() => toggleMenu(menu.key)}
                 >
                   <div className="flex items-center space-x-4 min-w-0">
-                    {menu.icon}
-                    <span className="whitespace-nowrap overflow-hidden text-ellipsis">{menu.title}</span>
+                    <span className="text-lg">{menu.icon}</span>
+                    <span className="whitespace-nowrap overflow-hidden text-ellipsis font-medium">{menu.title}</span>
                   </div>
                   {openMenu === menu.key ? (
-                    <FaChevronDown className="text-xs flex-shrink-0" />
+                    <FaChevronDown className="text-xs flex-shrink-0 transition-transform duration-300" />
                   ) : (
-                    <FaChevronRight className="text-xs flex-shrink-0" />
+                    <FaChevronRight className="text-xs flex-shrink-0 transition-transform duration-300" />
                   )}
                 </div>
                 {openMenu === menu.key && (
-                  <ul className="ml-4 mt-2 space-y-1 transition-all duration-300 ease-in-out">
+                  <ul className="ml-6 mt-1.5 space-y-1 transition-all duration-300 ease-in-out border-l-2 border-gray-700/50 pl-4">
                     {menu.subItems.map((sub, idx) => (
                       <li key={idx}>
                         <NavLink
                           to={sub.path}
                           className={({ isActive }) =>
-                            `block p-2 rounded-md transition-colors duration-200 ${
+                            `block px-3 py-2 rounded-lg transition-all duration-200 text-sm ${
                               isActive
-                                ? "text-sky-600 bg-gray-100"
-                                : "text-gray-500 hover:bg-gray-100"
+                                ? "text-blue-400 bg-gray-700/60 font-medium shadow-sm"
+                                : "text-gray-400 hover:text-gray-200 hover:bg-gray-700/30"
                             }`
                           }
                         >
@@ -195,13 +199,16 @@ const Sidebar = ({ sidebarOpen }) => {
         ))}
       </nav>
 
-      <div className={`p-4 border-t transition-opacity duration-500 ease-in-out ${
+      <div className={`p-4 border-t border-gray-700/50 transition-opacity duration-500 ease-in-out ${
         sidebarOpen ? "opacity-100 delay-100" : "opacity-0 delay-0"
       }`}>
-        <div className="flex items-center mb-4 min-w-0">
-          <FaUserCircle className="text-2xl text-gray-500 mr-3 flex-shrink-0" />
+        <div className="flex items-center mb-3 min-w-0 p-3 rounded-xl bg-gray-700/30">
+          <div className="relative">
+            <FaUserCircle className="text-3xl text-blue-400 mr-3 flex-shrink-0" />
+            <div className="absolute bottom-0 right-3 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-gray-800"></div>
+          </div>
           <div className="flex flex-col min-w-0 flex-1">
-            <span className="text-sm font-semibold text-gray-800 truncate whitespace-nowrap">
+            <span className="text-sm font-semibold text-white truncate whitespace-nowrap">
               {username}
             </span>
             <span className="text-xs text-gray-400 capitalize truncate whitespace-nowrap">{userRole}</span>
@@ -209,10 +216,10 @@ const Sidebar = ({ sidebarOpen }) => {
         </div>
         <button
           onClick={handleLogout}
-          className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group w-full hover:bg-gray-100 min-w-0"
+          className="px-4 py-2.5 flex items-center space-x-3 rounded-xl text-gray-300 group w-full hover:bg-red-500/20 hover:text-red-400 transition-all duration-300 border border-transparent hover:border-red-500/30 min-w-0"
         >
-          <FaSignOutAlt className="flex-shrink-0" />
-          <span className="whitespace-nowrap overflow-hidden text-ellipsis">Cerrar Sesión</span>
+          <FaSignOutAlt className="flex-shrink-0 text-lg" />
+          <span className="whitespace-nowrap overflow-hidden text-ellipsis font-medium">Cerrar Sesión</span>
         </button>
       </div>
     </aside>
